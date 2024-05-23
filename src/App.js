@@ -17,6 +17,7 @@ import DetailCategoriesManage from "./pages/AdminPage/DetailCategoriesManage/Det
 import JobRetailManage from "./pages/AdminPage/ServicesManage/JobRetailManage/JobRetailManage";
 import CommentManage from "./pages/AdminPage/ServicesManage/CommentManage/CommentManage";
 import CheckUser from "./pages/HOC/CheckUser";
+import CheckPermission from "./pages/HOC/CheckPermission";
 
 function App() {
   return (
@@ -44,9 +45,9 @@ function App() {
         <Route
           path="admin"
           element={
-            <CheckUser>
+            <CheckPermission>
               <AdminTemplate />
-            </CheckUser>
+            </CheckPermission>
           }
         >
           <Route index element={<UserManage />} />

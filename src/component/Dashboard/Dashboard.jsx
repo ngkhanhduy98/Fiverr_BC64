@@ -1,10 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logOutAction } from "../../redux/userReducer/userSlice";
 import Swal from "sweetalert2";
 
 const Dashboard = () => {
+  const { userInfor } = useSelector((state) => {
+    return state.userReducer;
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogOut = () => {
@@ -74,7 +77,7 @@ const Dashboard = () => {
       </div>
       <div className=" bottom-5 absolute w-[90%] flex flex-wrap justify-between items-center text-white bg-slate-700 rounded-lg py-2 px-5 cursor-pointer ">
         <div>
-          <h4 className="text-xxl font-semibold">Nguyễn Khánh Duy</h4>
+          <h4 className="text-xxl font-semibold">{userInfor.user.name}</h4>
           <button className="bg-gray-400 py-1 px-4 rounded-lg mr-3 mt-1">
             Edit
           </button>
@@ -88,7 +91,7 @@ const Dashboard = () => {
           </button>
         </div>
         <img
-          src="https://demo5.cybersoft.edu.vn/static/media/signin.6f1c72291c1ec0817ded.jpg"
+          src={userInfor.user.avatar}
           className="w-14 h-14 rounded-full border"
           alt=""
         />
