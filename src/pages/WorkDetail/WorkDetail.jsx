@@ -315,10 +315,10 @@ const WorkDetail = () => {
             </h3>
           </div>
           <span className="">{congViecChiTiet?.congViec.moTaNgan}</span>
-          <div className="flex flex-wrap items-center  font-semibold">
+          {/* <div className="flex flex-wrap items-center  font-semibold">
             <span className="mr-10">123123</span>
             <span>123123</span>
-          </div>
+          </div> */}
           <ul className="my-4">
             <li className="flex flex-wrap items-center">
               <svg

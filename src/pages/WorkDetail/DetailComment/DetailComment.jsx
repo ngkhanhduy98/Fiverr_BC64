@@ -27,7 +27,7 @@ const DetailComment = () => {
     initialValues: {
       id: 0,
       maCongViec: idCongViec,
-      maNguoiBinhLuan: userInfor.user.id,
+      maNguoiBinhLuan: userInfor?.user.id,
       ngayBinhLuan: today,
       noiDung: "",
       saoBinhLuan: 0,

@@ -41,7 +41,14 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<RegisterPage />} />
         </Route>
-        <Route path="admin" element={<AdminTemplate />}>
+        <Route
+          path="admin"
+          element={
+            <CheckUser>
+              <AdminTemplate />
+            </CheckUser>
+          }
+        >
           <Route index element={<UserManage />} />
           <Route path="jobmanage" element={<JobManage />} />
           <Route path="categoriesmanage" element={<CategoriesManage />} />
