@@ -16,7 +16,7 @@ const Works = () => {
   };
   useEffect(() => {
     fetchDanhSachCongViec();
-  }, []);
+  }, [idNhomCongViec]);
   const renderItem = () => {
     return congViec?.map((data, i) => {
       return (
