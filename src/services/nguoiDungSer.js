@@ -14,4 +14,12 @@ export const nguoiDungSer = {
       },
     });
   },
+  putUserData: (data, id) => {
+    let uri = `/api/users/${id}`;
+    return http.put(uri, data);
+  },
+  delUser: (id) => {
+    let uri = `/api/users/?id=${id}`;
+    return http.delete(uri, id);
+  },
 };

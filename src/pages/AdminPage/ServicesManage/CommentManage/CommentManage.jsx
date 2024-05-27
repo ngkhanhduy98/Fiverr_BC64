@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { adminBinhLuanSer } from "../../../../services/adminBinhLuanSer";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const CommentManage = () => {
   const [commentData, setCommentData] = useState();
+  const { userInfor } = useSelector((state) => state.userReducer);
+  let headerToken = userInfor.token;
   const fetchCommentData = async () => {
     try {
       let data = await adminBinhLuanSer.getBinhLuan();
       setCommentData(data.data.content);
       console.log(`data`, data.data.content);
     } catch (error) {}
+  };
+  const xoaBinhLuan = async (id) => {
+    console.log(`Token`, userInfor.token);
+    let data = await adminBinhLuanSer.delBinhLuan(id, headerToken);
+    if (data) {
+      Swal.fire({
+        title: "Thành công",
+        text: "Bình luận của bạn đã được xóa",
+        icon: "success",
+      });
+    }
+    fetchCommentData();
   };
   useEffect(() => {
     fetchCommentData();
@@ -25,7 +41,12 @@ const CommentManage = () => {
             <button className="mr-2 py-1 px-3 rounded-lg bg-black text-white font-semibold">
               Edit
             </button>
-            <button className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold">
+            <button
+              onClick={() => {
+                xoaBinhLuan(data.id);
+              }}
+              className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold"
+            >
               Delete
             </button>
           </td>

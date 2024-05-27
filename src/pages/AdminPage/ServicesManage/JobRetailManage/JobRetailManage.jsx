@@ -1,14 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { adminThueCongViecSer } from "../../../../services/adminThueCongViecSer";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const JobRetailManage = () => {
   const [data, setData] = useState();
+  const { userInfor } = useSelector((state) => state.userReducer);
   const fetchData = async () => {
     try {
       let data = await adminThueCongViecSer.getThueCongViec();
       setData(data.data.content);
       console.log(`data`, data.data.content);
     } catch (error) {}
+  };
+  const delCongViecThue = async (id) => {
+    const data = await adminThueCongViecSer.delCongViecThue(
+      id,
+      userInfor.token
+    );
+    fetchData();
+    if (data) {
+      Swal.fire({
+        title: "Thành công",
+        text: "Công việc đã được xóa",
+        icon: "success",
+      });
+    }
   };
   useEffect(() => {
     fetchData();
@@ -25,7 +42,12 @@ const JobRetailManage = () => {
             <button className="mr-2 py-1 px-3 rounded-lg bg-black text-white font-semibold">
               Edit
             </button>
-            <button className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold">
+            <button
+              onClick={() => {
+                delCongViecThue(data.id);
+              }}
+              className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold"
+            >
               Delete
             </button>
           </td>

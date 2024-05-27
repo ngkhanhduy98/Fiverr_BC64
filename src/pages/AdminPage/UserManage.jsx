@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { nguoiDungSer } from "../../services/nguoiDungSer";
+import Swal from "sweetalert2";
 
 const UserManage = () => {
   const [userData, setUserData] = useState();
+  const delUser = async (id) => {
+    const data = await nguoiDungSer.delUser(id);
+    if (data.data.statusCode == 200) {
+      Swal.fire({
+        title: "Thành công",
+        text: "Người dùng đã được xóa",
+        icon: "success",
+      });
+    }
+    fetchUserData();
+  };
   const fetchUserData = async () => {
     try {
       let data = await nguoiDungSer.getUsers();
@@ -27,7 +39,12 @@ const UserManage = () => {
             <button className="py-1 px-3 rounded-lg bg-black text-white font-semibold">
               Edit
             </button>
-            <button className="ml-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold">
+            <button
+              onClick={() => {
+                delUser(data.id);
+              }}
+              className="ml-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold"
+            >
               Delete
             </button>
           </td>

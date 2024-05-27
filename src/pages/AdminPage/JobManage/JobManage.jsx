@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { adminCongViecSer } from "../../../services/adminCongViecSer";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const JobManage = () => {
   const [jobData, setJobData] = useState();
@@ -9,6 +11,27 @@ const JobManage = () => {
       setJobData(data.data.content);
       console.log(`data`, data.data.content);
     } catch (error) {}
+  };
+  const { userInfor } = useSelector((state) => state.userReducer);
+
+  const deleteJob = async (id) => {
+    try {
+      let data = await adminCongViecSer.delCongViec(id, userInfor.token);
+      if (data?.data.statusCode == 200) {
+        Swal.fire({
+          title: "Thành công",
+          text: "Công việc đã được xóa",
+          icon: "success",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Thất bại",
+        text: error.response.data.content,
+        icon: "error",
+      });
+    }
+    fetchJobData();
   };
   useEffect(() => {
     fetchJobData();
@@ -27,7 +50,12 @@ const JobManage = () => {
             <button className="py-1 px-3 rounded-lg bg-black text-white font-semibold">
               Edit
             </button>
-            <button className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold">
+            <button
+              onClick={() => {
+                deleteJob(data.id);
+              }}
+              className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold"
+            >
               Delete
             </button>
           </td>

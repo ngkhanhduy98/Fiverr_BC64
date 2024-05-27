@@ -1,7 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { adminChiTietLoaiCongViecSer } from "../../../services/adminChiTietLoaiCongViec";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const DetailCategoriesManage = () => {
+  const { userInfor } = useSelector((state) => state.userReducer);
+  const delDetailCategories = async (id) => {
+    try {
+      const data = await adminChiTietLoaiCongViecSer.delChiTietLoaiCongViec(
+        id,
+        userInfor.token
+      );
+      if (data.data.statusCode == 200) {
+        Swal.fire({
+          title: "Thành công",
+          text: "Bình luận của bạn đã được xóa",
+          icon: "success",
+        });
+      }
+      fetchDetailCategoriesData();
+    } catch (error) {}
+  };
   const [data, setData] = useState();
   const fetchDetailCategoriesData = async () => {
     try {
@@ -27,7 +46,12 @@ const DetailCategoriesManage = () => {
             <button className="mr-2 py-1 px-3 rounded-lg bg-black text-white font-semibold">
               Edit
             </button>
-            <button className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold">
+            <button
+              onClick={() => {
+                delDetailCategories(data.id);
+              }}
+              className=" mt-2 py-1 px-3 rounded-lg bg-red-700 text-white font-semibold"
+            >
               Delete
             </button>
           </td>

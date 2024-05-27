@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
 import { nguoiDungSer } from "../../services/nguoiDungSer";
 import { userLocal } from "../../services/userLocal";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { loginThunk } from "../../redux/userReducer/userThunk";
 
 const Profile = () => {
   const { userInfor } = useSelector((state) => state.userReducer);
@@ -16,15 +19,61 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const formEditProfile = useFormik({
+    initialValues: {
+      id: userInfor.user.id,
+      email: userInfor.user.email,
+      name: userInfor.user.name,
+      phone: userInfor.user.phone,
+      birthday: userInfor.user.birthday,
+    },
+    onSubmit: async (value) => {
+      try {
+        const promise = await nguoiDungSer.putUserData(
+          value,
+          userInfor.user.id
+        );
+        console.log("🤪 ~ onSubmit: ~ promise:", promise);
+
+        // console.log("🤪 ~ onSubmit: ~ promise:", promise);
+        if (promise.status == 200) {
+          Swal.fire({
+            title: "Đăng nhập thành công",
+            text: "Bạn sẽ được chuyển về trang chủ",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+          }).then(() => {
+            let dataLocal = userLocal.get();
+            // console.log(`Data truoc update`, dataLocal);
+            dataLocal.user = promise.data.content;
+            // console.log(`Data sau update`, dataLocal);
+            userLocal.del();
+            userLocal.set(dataLocal);
+          });
+        }
+        // } else {
+        //   Swal.fire({
+        //     title: "Đăng nhập thất bại",
+        //     text: "Vui lòng thử lại",
+        //     icon: "error",
+        //     timer: 2000,
+        //     timerProgressBar: true,
+        //   });
+        // }
+      } catch (error) {}
+    },
+  });
+
   const handleChangeImg = async (event) => {
     const bodyFormData = new FormData();
     bodyFormData.append("formFile", event.target.files[0]);
-    console.log("🤪 ~ handleChangeImg ~ bodyFormData:", bodyFormData);
+    // console.log("🤪 ~ handleChangeImg ~ bodyFormData:", bodyFormData);
     const promise = await nguoiDungSer.postUserAvatar(
       bodyFormData,
       userInfor.token
     );
-    console.log("🤪 ~ handleChangeImg ~ promise:", promise);
+    // console.log("🤪 ~ handleChangeImg ~ promise:", promise);
     if (promise.data.statusCode == 200) {
       Swal.fire({
         title: "Done",
@@ -33,7 +82,12 @@ const Profile = () => {
         timer: 2000,
         timerProgressBar: true,
       }).then(() => {
-        userLocal.set(promise.data.content);
+        let dataLocal = userLocal.get();
+        // console.log(`Data truoc update`, dataLocal);
+        dataLocal.user.avatar = promise.data.content.avatar;
+        // console.log(`Data sau update`, dataLocal);
+        userLocal.del();
+        userLocal.set(dataLocal);
       });
     }
 
@@ -44,7 +98,7 @@ const Profile = () => {
     try {
       let data = await thueCongViecSer.getCongViecDaThue(userInfor.token);
       setDsCongViec(data.data.content);
-      console.log(`Data cong viec`, data.data.content);
+      // console.log(`Data cong viec`, data.data.content);
     } catch (error) {}
   };
   const handleLogOut = () => {
@@ -59,8 +113,8 @@ const Profile = () => {
     });
   };
   const delCongViec = async (id) => {
-    console.log(userInfor.token);
-    console.log(id);
+    // console.log(userInfor.token);
+    // console.log(id);
 
     try {
       const promise = await thueCongViecSer.delCongViecDaThue(
@@ -79,8 +133,8 @@ const Profile = () => {
   };
   const clickToOpenFile = () => {
     ref.current.click();
-    console.log("🤪 ~ clickToOpenFile ~ ref:", ref);
-    console.log(`click`);
+    // console.log("🤪 ~ clickToOpenFile ~ ref:", ref);
+    // console.log(`click`);
   };
 
   useEffect(() => {
@@ -151,6 +205,7 @@ const Profile = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  // console.log(`úser infor`, userInfor);
   return (
     <div className="xl:max-w-[1400px] mx-auto max-w-[96%] py-6 grid-cols-1 grid md:grid-cols-3">
       <div className="pr-10">
@@ -332,7 +387,79 @@ const Profile = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <div className="grid grid-cols-2"></div>
+        <form action="" onSubmit={formEditProfile.handleSubmit}>
+          <div className="grid grid-cols-2 space-x-2">
+            <div className="ml-2">
+              <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Email
+              </label>
+              <input
+                disabled
+                value={userInfor.user.email}
+                type="text"
+                id="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Name
+              </label>
+              <input
+                onChange={formEditProfile.handleChange}
+                defaultValue={userInfor.user.name}
+                type="text"
+                id="name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                for="phone"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Phone
+              </label>
+              <input
+                onChange={formEditProfile.handleChange}
+                type="text"
+                id="phone"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                defaultValue={userInfor.user.phone}
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="birthday"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                BirthDay
+              </label>
+              <input
+                defaultValue={userInfor.user.birthday}
+                onChange={formEditProfile.handleChange}
+                type="text"
+                id="birthday"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="absolute left-8 bg-green-400 px-5 py-2 rounded-md mt-2 font-semibold text-white hover:bg-green-500 duration-300"
+          >
+            Submit
+          </button>
+        </form>
       </Modal>
     </div>
   );
