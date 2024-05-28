@@ -22,4 +22,8 @@ export const nguoiDungSer = {
     let uri = `/api/users/?id=${id}`;
     return http.delete(uri, id);
   },
+  postUser: (data) => {
+    let uri = "/api/users";
+    return http.post(uri, data);
+  },
 };
