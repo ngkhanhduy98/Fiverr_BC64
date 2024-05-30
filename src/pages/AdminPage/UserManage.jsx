@@ -8,8 +8,18 @@ import { useNavigate } from "react-router-dom";
 
 const UserManage = () => {
   const [userData, setUserData] = useState();
+  const [userDataByID, setUserDatabyId] = useState();
   const navigate = useNavigate();
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const getUserDataById = async (id) => {
+    try {
+      const data = await nguoiDungSer.getUserByID(id);
+      console.log(`USerDataByID`, data.data.content);
+      setUserDatabyId(data.data.content);
+      showEditUserModal();
+    } catch (error) {}
+  };
   const delUser = async (id) => {
     const data = await nguoiDungSer.delUser(id);
     if (data.data.statusCode == 200) {
@@ -37,10 +47,20 @@ const UserManage = () => {
   const showAddUserModal = () => {
     setIsAddUserModalOpen(true);
   };
-  const handleOk = () => {
+  const showEditUserModal = () => {
+    setIsEditUserModalOpen(true);
+    // getUserDataById(id);
+  };
+  const handleEditOK = () => {
+    setIsEditUserModalOpen(false);
+  };
+  const handleEditCancel = () => {
+    setIsEditUserModalOpen(false);
+  };
+  const handleAddOk = () => {
     setIsAddUserModalOpen(false);
   };
-  const handleCancel = () => {
+  const handleAddCancel = () => {
     setIsAddUserModalOpen(false);
   };
   const formAddUser = useFormik({
@@ -97,6 +117,47 @@ const UserManage = () => {
         .required("Tên không được để trống không được để trống"),
     }),
   });
+  const formEditUser = useFormik({
+    initialValues: {
+      id: 0,
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      birthday: "",
+      gender: true,
+      role: "",
+      skill: [""],
+      certification: [""],
+    },
+    onSubmit: async (value) => {
+      try {
+        console.log(userDataByID.id);
+        const data = await nguoiDungSer.putUserData(value, userDataByID.id);
+        console.log(data);
+        if (data.data.statusCode == 200) {
+          Swal.fire({
+            title: "Thành công",
+            text: "Thông tin user đã được thay đổi thành công",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          setIsEditUserModalOpen(false);
+          fetchUserData();
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Thất bại",
+          text: "Chỉnh sửa thông tin user không thành công",
+          text: error.response.data.content,
+          icon: "error",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      }
+    },
+  });
   const renderUserList = () => {
     return userData?.map((data, i) => {
       return (
@@ -106,7 +167,12 @@ const UserManage = () => {
           <td className="px-6 py-4">{data.email} </td>
           <td className="px-6 py-4">{data.role} </td>
           <td className="px-6 py-4">
-            <button className="py-1 px-3 rounded-lg bg-black text-white font-semibold">
+            <button
+              onClick={() => {
+                getUserDataById(data.id);
+              }}
+              className="py-1 px-3 rounded-lg bg-black text-white font-semibold"
+            >
               Edit
             </button>
             <button
@@ -156,17 +222,17 @@ const UserManage = () => {
         </table>
       </div>
       <Modal
-        title="Edit your profile"
+        title="Add ADMIN"
         open={isAddUserModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={handleAddOk}
+        onCancel={handleAddCancel}
       >
         <form action="" onSubmit={formAddUser.handleSubmit}>
           <div className="grid grid-cols-2">
             <div className="ml-2">
               <label
-                for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Email
               </label>
@@ -174,7 +240,7 @@ const UserManage = () => {
                 onChange={formAddUser.handleChange}
                 type="text"
                 id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
               <p className=" mt-1 ml-3 text-red-500 text-xs font-mono h-4">
@@ -183,8 +249,8 @@ const UserManage = () => {
             </div>
             <div className="ml-2">
               <label
-                for="name"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Name
               </label>
@@ -192,7 +258,7 @@ const UserManage = () => {
                 onChange={formAddUser.handleChange}
                 type="text"
                 id="name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
               <p className=" mt-1 ml-3 text-red-500 text-xs font-mono h-4">
@@ -201,8 +267,8 @@ const UserManage = () => {
             </div>
             <div className="ml-2">
               <label
-                for="phone"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="phone"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Phone
               </label>
@@ -210,7 +276,7 @@ const UserManage = () => {
                 onChange={formAddUser.handleChange}
                 type="text"
                 id="phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
               <p className=" mt-1 ml-3 text-red-500 text-xs font-mono h-4">
@@ -219,8 +285,8 @@ const UserManage = () => {
             </div>
             <div className="ml-2">
               <label
-                for="password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="password"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Password
               </label>
@@ -228,7 +294,7 @@ const UserManage = () => {
                 onChange={formAddUser.handleChange}
                 type="password"
                 id="password"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
               <p className=" mt-1 ml-3 text-red-500 text-xs font-mono h-4">
@@ -237,8 +303,8 @@ const UserManage = () => {
             </div>
             <div className="ml-2">
               <label
-                for="birthday"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="birthday"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Birthday
               </label>
@@ -246,7 +312,7 @@ const UserManage = () => {
                 onChange={formAddUser.handleChange}
                 type="date"
                 id="birthday"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
             </div>
@@ -287,6 +353,155 @@ const UserManage = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <button className="px-7 py-2 bg-green-400 hover:bg-green-500 duration-300 text-white font-semibold absolute left-8 bottom-4 rounded-lg">
+            Add
+          </button>
+        </form>
+      </Modal>
+      <Modal
+        title="Edit your profile"
+        open={isEditUserModalOpen}
+        onOk={handleEditOK}
+        onCancel={handleEditCancel}
+      >
+        <form action="" onSubmit={formEditUser.handleSubmit}>
+          <div className="grid grid-cols-2">
+            <div className="ml-2">
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Email
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                type="text"
+                id="email"
+                defaultValue={userDataByID?.email}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+              <p className=" mt-1 ml-3 text-red-500 text-xs font-mono h-4">
+                {formEditUser.errors.email}
+              </p>
+            </div>
+            <div className="ml-2">
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Name
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                defaultValue={userDataByID?.name}
+                type="text"
+                id="name"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="ml-2">
+              <label
+                htmlFor="phone"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Phone
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                type="text"
+                id="phone"
+                defaultValue={userDataByID?.phone}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="ml-2">
+              <label
+                htmlFor="password"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Password
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                type="text"
+                id="password"
+                defaultValue={userDataByID?.password}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="ml-2">
+              <label
+                htmlFor="birthday"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Birthday
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                type="date"
+                id="birthday"
+                defaultValue={userDataByID?.birthday}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="ml-2">
+              <label
+                htmlFor="role"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Role
+              </label>
+              <input
+                onChange={formEditUser.handleChange}
+                type="text"
+                id="role"
+                defaultValue={userDataByID?.role}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            {/* <div className=" ml-2">
+              <label htmlFor="">Gender</label>
+              <div className="flex flex-wrap space-x-5 mt-4">
+                <div className="flex items-center">
+                  <input
+                    id="default-radio-1"
+                    type="radio"
+                    defaultValue
+                    name="default-radio"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor="default-radio-1"
+                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Men
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    defaultChecked
+                    id="default-radio-2"
+                    type="radio"
+                    defaultValue
+                    name="default-radio"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    htmlFor="default-radio-2"
+                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Female
+                  </label>
+                </div>
+              </div>
+            </div> */}
           </div>
           <button className="px-7 py-2 bg-green-400 hover:bg-green-500 duration-300 text-white font-semibold absolute left-8 bottom-4 rounded-lg">
             Add

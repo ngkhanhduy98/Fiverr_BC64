@@ -26,4 +26,8 @@ export const nguoiDungSer = {
     let uri = "/api/users";
     return http.post(uri, data);
   },
+  getUserByID: (id) => {
+    let uri = `/api/users/${id}`;
+    return http.get(uri);
+  },
 };
