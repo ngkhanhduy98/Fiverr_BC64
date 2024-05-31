@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { binhLuanSer } from "../../../services/binhLuanSer";
 import { useFormik } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 const DetailComment = () => {
+  const dispacth = useDispatch();
   const { idCongViec } = useParams();
   const [dsCommment, setDanhSachComment] = useState();
   const { userInfor } = useSelector((state) => {
@@ -33,18 +34,31 @@ const DetailComment = () => {
       saoBinhLuan: 0,
     },
     onSubmit: async (value) => {
-      try {
-        const promise = await binhLuanSer.postBinhLuan(value, userInfor.token);
-        if (promise.data.statusCode == 201) {
-          Swal.fire({
-            title: "Thành công",
-            text: "Bình luận của bạn đã được đăng lên thành công",
-            icon: "success",
-          }).then(() => {
-            fetchBinhLuan();
-          });
-        }
-      } catch (error) {}
+      if (userInfor) {
+        try {
+          const promise = await binhLuanSer.postBinhLuan(
+            value,
+            userInfor.token
+          );
+          if (promise.data.statusCode == 201) {
+            Swal.fire({
+              title: "Thành công",
+              text: "Bình luận của bạn đã được đăng lên thành công",
+              icon: "success",
+            }).then(() => {
+              fetchBinhLuan();
+            });
+          }
+        } catch (error) {}
+      } else {
+        Swal.fire({
+          title: "Thất bại",
+          text: "Bạn cần phải đăng nhập để có thể gửi bình luận",
+          icon: "error",
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      }
     },
   });
   const renderBinhLuan = () => {

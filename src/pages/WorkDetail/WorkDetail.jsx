@@ -18,32 +18,42 @@ const WorkDetail = () => {
   let mm = String(today.getMonth() + 1).padStart(2, "0");
   let yyyy = today.getFullYear();
   today = dd + "/" + mm + "/" + yyyy;
-  const thueViec = async (initialState) => {
-    try {
-      const promise = await thueCongViecSer.postThueCongViec(
-        {
-          id: 0,
-          maCongViec: idCongViec,
-          maNguoiThue: userInfor.user.id,
-          ngayThue: today,
-          hoanThanh: true,
-        },
-        userInfor.token
-      );
-      console.log("🤪 ~ thueViec ~ promise:", promise);
+  const thueViec = async () => {
+    if (userInfor) {
+      try {
+        const promise = await thueCongViecSer.postThueCongViec(
+          {
+            id: 0,
+            maCongViec: idCongViec,
+            maNguoiThue: userInfor.user.id,
+            ngayThue: today,
+            hoanThanh: true,
+          },
+          userInfor.token
+        );
+        console.log("🤪 ~ thueViec ~ promise:", promise);
 
-      if (promise.data.statusCode == 201) {
-        Swal.fire({
-          title: "Thành công",
-          text: "Bạn đã thuê công việc này",
-          icon: "success",
-          timer: 2000,
-          timerProgressBar: true,
-        }).then(() => {
-          navigate("/profile");
-        });
-      }
-    } catch (error) {}
+        if (promise.data.statusCode == 201) {
+          Swal.fire({
+            title: "Thành công",
+            text: "Bạn đã thuê công việc này",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+          }).then(() => {
+            navigate("/profile");
+          });
+        }
+      } catch (error) {}
+    } else {
+      Swal.fire({
+        title: "Thất bại",
+        text: "Bạn cần phải đăng nhập để sử dụng chức năng này",
+        icon: "error",
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }
   };
   const fetchChiTietCongViec = async () => {
     try {
