@@ -4,18 +4,40 @@ import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { Modal } from "antd";
 import { useFormik } from "formik";
+import { adminChiTietLoaiCongViecSer } from "../../../services/adminChiTietLoaiCongViec";
 
 const JobManage = () => {
   const [jobData, setJobData] = useState();
   const [jobDataById, setJobDataByID] = useState();
+  const [dsChiTietLoai, setDsChiTietLoai] = useState();
   const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const fetchJobData = async () => {
     try {
       let data = await adminCongViecSer.getCongViecData();
+      let dataChiTietLoai =
+        await adminChiTietLoaiCongViecSer.getChiTietLoaiCongViec();
       setJobData(data.data.content);
       console.log(`data`, data.data.content);
+
+      setDsChiTietLoai(dataChiTietLoai.data.content);
+      console.log(`dsChITietLoai`, dsChiTietLoai);
     } catch (error) {}
+  };
+  const renderChiTiet = (dsChiTietLoai) => {
+    return dsChiTietLoai?.map((data, i) => {
+      console.log(`id:data`, data.id);
+      return (
+        <option key={i} value={data.id}>
+          {data.tenChiTiet}, {data.id}
+        </option>
+      );
+    });
+  };
+  const renderMaChiTietLoai = () => {
+    return dsChiTietLoai?.map((data, i) => {
+      return renderChiTiet(data.dsChiTietLoai);
+    });
   };
   const { userInfor } = useSelector((state) => state.userReducer);
   const getDataCongViecById = async (id) => {
@@ -23,6 +45,29 @@ const JobManage = () => {
       const data = await adminCongViecSer.getCongViecById(id);
       console.log(`Data cong viec bt id`, data.data.content);
       setJobDataByID(data.data.content);
+      //   id: 0,
+      // tenCongViec: jobDataById?.tenCongViec,
+      // danhGia: jobDataById?.danhGia,
+      // giaTien: jobDataById?.giaTien,
+      // nguoiTao: jobDataById?.nguoiTao,
+      // hinhAnh: jobDataById?.hinhAnh,
+      // moTa: jobDataById?.moTa,
+      // maChiTietLoaiCongViec: jobDataById?.maChiTietLoaiCongViec,
+      // moTaNgan: jobDataById?.moTaNgan,
+      // saoCongViec: jobDataById?.saoCongViec,
+      formEditJob.setFieldValue("id", data.data.content.id);
+      formEditJob.setFieldValue("tenCongViec", data.data.content.tenCongViec);
+      formEditJob.setFieldValue("danhGia", data.data.content.danhGia);
+      formEditJob.setFieldValue("giaTien", data.data.content.giaTien);
+      formEditJob.setFieldValue("nguoiTao", data.data.content.nguoiTao);
+      formEditJob.setFieldValue("hinhAnh", data.data.content.hinhAnh);
+      formEditJob.setFieldValue("moTa", data.data.content.moTa);
+      formEditJob.setFieldValue(
+        "maChiTietLoaiCongViec",
+        data.data.content.maChiTietLoaiCongViec
+      );
+      formEditJob.setFieldValue("moTaNgan", data.data.content.moTaNgan);
+      formEditJob.setFieldValue("saoCongViec", data.data.content.saoCongViec);
       showEditJobModal();
     } catch (error) {}
   };
@@ -51,6 +96,7 @@ const JobManage = () => {
   }, []);
   const showAddUserModal = () => {
     setIsAddJobModalOpen(true);
+    formAddJob.setFieldValue("nguoiTao", userInfor.user.id);
   };
   const showEditJobModal = () => {
     setIsEditJobModalOpen(true);
@@ -111,15 +157,15 @@ const JobManage = () => {
   const formEditJob = useFormik({
     initialValues: {
       id: 0,
-      tenCongViec: jobDataById?.tenCongViec,
-      danhGia: jobDataById?.danhGia,
-      giaTien: jobDataById?.giaTien,
-      nguoiTao: jobDataById?.nguoiTao,
-      hinhAnh: jobDataById?.hinhAnh,
-      moTa: jobDataById?.moTa,
-      maChiTietLoaiCongViec: jobDataById?.maChiTietLoaiCongViec,
-      moTaNgan: jobDataById?.moTaNgan,
-      saoCongViec: jobDataById?.saoCongViec,
+      tenCongViec: "",
+      danhGia: 0,
+      giaTien: 0,
+      nguoiTao: 0,
+      hinhAnh: "",
+      moTa: "",
+      maChiTietLoaiCongViec: "",
+      moTaNgan: "",
+      saoCongViec: 0,
     },
     onSubmit: async (value) => {
       try {
@@ -275,7 +321,9 @@ const JobManage = () => {
                 Người tạo
               </label>
               <input
+                disabled
                 onChange={formAddJob.handleChange}
+                value={formAddJob.values.nguoiTao}
                 type="number"
                 id="nguoiTao"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -304,13 +352,22 @@ const JobManage = () => {
               >
                 Mã chi tiết loại công việc
               </label>
-              <input
+              {/* <input
                 onChange={formAddJob.handleChange}
                 type="number"
                 id="momaChiTietLoaiCongViecTa"
                 className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
-              />
+              /> */}
+              <select
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="maLoaiCongViec"
+                name="maLoaiCongViec"
+                defaultValue={1}
+                onChange={formAddJob.handleChange}
+              >
+                {renderMaChiTietLoai()}
+              </select>
             </div>
             <div className="ml-2 col-span-2">
               <label
@@ -382,7 +439,7 @@ const JobManage = () => {
                 Tên công việc
               </label>
               <input
-                defaultValue={jobDataById?.tenCongViec}
+                value={formEditJob.values.tenCongViec}
                 onChange={formEditJob.handleChange}
                 type="text"
                 id="tenCongViec"
@@ -398,7 +455,7 @@ const JobManage = () => {
                 Đánh giá
               </label>
               <input
-                defaultValue={jobDataById?.danhGia}
+                value={formEditJob.values.danhGia}
                 onChange={formEditJob.handleChange}
                 type="text"
                 id="danhGia"
@@ -414,7 +471,7 @@ const JobManage = () => {
                 Giá tiền
               </label>
               <input
-                defaultValue={jobDataById?.giaTien}
+                value={formEditJob.values.giaTien}
                 onChange={formEditJob.handleChange}
                 type="number"
                 id="giaTien"
@@ -430,7 +487,7 @@ const JobManage = () => {
                 Người tạo
               </label>
               <input
-                defaultValue={jobDataById?.nguoiTao}
+                value={formEditJob.values.nguoiTao}
                 onChange={formEditJob.handleChange}
                 type="number"
                 id="nguoiTao"
@@ -446,7 +503,7 @@ const JobManage = () => {
                 Sao công việc
               </label>
               <input
-                defaultValue={jobDataById?.saoCongViec}
+                value={formEditJob.values.saoCongViec}
                 onChange={formEditJob.handleChange}
                 type="number"
                 id="saoCongViec"
@@ -462,7 +519,7 @@ const JobManage = () => {
                 Mã chi tiết loại công việc
               </label>
               <input
-                defaultValue={jobDataById?.maChiTietLoaiCongViec}
+                value={formEditJob.values.maChiTietLoaiCongViec}
                 onChange={formEditJob.handleChange}
                 type="number"
                 id="momaChiTietLoaiCongViecTa"
@@ -478,7 +535,7 @@ const JobManage = () => {
                 Hình ảnh
               </label>
               <input
-                defaultValue={jobDataById?.hinhAnh}
+                value={formEditJob.values.hinhAnh}
                 onChange={formEditJob.handleChange}
                 type="text"
                 id="hinhAnh"
@@ -495,7 +552,7 @@ const JobManage = () => {
               </label>
               <textarea
                 rows={4}
-                defaultValue={jobDataById?.moTa}
+                value={formEditJob.values.moTa}
                 onChange={formEditJob.handleChange}
                 type="text"
                 id="moTa"
@@ -513,7 +570,7 @@ const JobManage = () => {
               </label>
               <textarea
                 rows={4}
-                defaultValue={jobDataById?.moTaNgan}
+                value={formEditJob.values.moTaNgan}
                 onChange={formEditJob.handleChange}
                 type="text"
                 id="moTaNgan"

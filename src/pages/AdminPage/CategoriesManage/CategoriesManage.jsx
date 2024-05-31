@@ -44,6 +44,11 @@ const CategoriesManage = () => {
       const data = await adminLoaiCongViecSer.getLoaiCongViecById(id);
       console.log(`Lay data thanh cong`);
       setCategoryDataById(data.data.content);
+      formEditCategoryItem.setFieldValue(
+        "tenLoaiCongViec",
+        data.data.content.tenLoaiCongViec
+      );
+
       showEditCategoryItemModal();
     } catch (error) {}
   };
@@ -166,7 +171,7 @@ const CategoriesManage = () => {
         onClick={showAddCategoryItemModal}
         className="bg-green-400 uppercase rounded-xl mb-6 text-white py-2 px-5 font-semibold hover:bg-green-500"
       >
-        Add user
+        Add Item
       </button>
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -233,7 +238,7 @@ const CategoriesManage = () => {
               </label>
               <input
                 onChange={formEditCategoryItem.handleChange}
-                defaultValue={categoryDataById?.tenLoaiCongViec}
+                value={formEditCategoryItem.values.tenLoaiCongViec}
                 type="text"
                 id="tenLoaiCongViec"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

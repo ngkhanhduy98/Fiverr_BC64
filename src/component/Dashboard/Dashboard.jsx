@@ -78,7 +78,12 @@ const Dashboard = () => {
       <div className=" bottom-5 absolute w-[90%] flex flex-wrap justify-between items-center text-white bg-slate-700 rounded-lg py-2 px-5 cursor-pointer ">
         <div>
           <h4 className="text-xxl font-semibold">{userInfor.user.name}</h4>
-          <button className="bg-gray-400 py-1 px-4 rounded-lg mr-3 mt-1">
+          <button
+            onClick={() => {
+              navigate(`/profile`);
+            }}
+            className="bg-gray-400 py-1 px-4 rounded-lg mr-3 mt-1"
+          >
             Edit
           </button>
           <button

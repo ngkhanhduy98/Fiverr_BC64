@@ -21,4 +21,8 @@ export const congViecSer = {
     let uri = `/api/cong-viec/lay-cong-viec-chi-tiet/${idCongViec}`;
     return http.get(uri);
   },
+  searchByName: (tenCongViec) => {
+    let uri = `/api/cong-viec/lay-danh-sach-cong-viec-theo-ten/${tenCongViec}`;
+    return http.get(uri);
+  },
 };

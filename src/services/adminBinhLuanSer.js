@@ -13,4 +13,12 @@ export const adminBinhLuanSer = {
       },
     });
   },
+  putBinhLuanById: (id, data, userToken) => {
+    let uri = `/api/binh-luan/${id}`;
+    return http.put(uri, data, {
+      headers: {
+        token: userToken,
+      },
+    });
+  },
 };

@@ -13,4 +13,20 @@ export const adminThueCongViecSer = {
       },
     });
   },
+  getCongViecThueById: (id, userToken) => {
+    let uri = `/api/thue-cong-viec/${id}`;
+    return http.get(uri, {
+      headers: {
+        token: userToken,
+      },
+    });
+  },
+  putCongViecThueById: (id, data, userToken) => {
+    let uri = `/api/thue-cong-viec/${id}`;
+    return http.put(uri, data, {
+      headers: {
+        token: userToken,
+      },
+    });
+  },
 };

@@ -18,6 +18,7 @@ import JobRetailManage from "./pages/AdminPage/ServicesManage/JobRetailManage/Jo
 import CommentManage from "./pages/AdminPage/ServicesManage/CommentManage/CommentManage";
 import CheckUser from "./pages/HOC/CheckUser";
 import CheckPermission from "./pages/HOC/CheckPermission";
+import SearchPage from "./pages/SearchPage/SearchPage";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
           <Route path="categories/:idLoaiCongViec" element={<Categories />} />
           <Route path="works/:idNhomCongViec" element={<Works />} />
           <Route path="works/detail/:idCongViec" element={<WorkDetail />} />
-
+          <Route path="works/search/:tenCongViec" element={<SearchPage />} />
           <Route
             path="profile"
             element={

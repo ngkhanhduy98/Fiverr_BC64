@@ -66,7 +66,10 @@ const MenuLoaiCongViec = () => {
   const renderMenuList = (dataMenu) => {
     return dataMenu?.map((menuItem, i) => {
       return (
-        <Dropdown menu={{ items: renderSubMenu(menuItem.dsNhomChiTietLoai) }}>
+        <Dropdown
+          key={i}
+          menu={{ items: renderSubMenu(menuItem.dsNhomChiTietLoai) }}
+        >
           <a
             key={i}
             className="px-3 hover:text-green-400 cursor-pointer"

@@ -17,6 +17,21 @@ const UserManage = () => {
       const data = await nguoiDungSer.getUserByID(id);
       console.log(`USerDataByID`, data.data.content);
       setUserDatabyId(data.data.content);
+      //   id: 0,
+      // name: "",
+      // email: "",
+      // password: "",
+      // phone: "",
+      // birthday: "",
+      // gender: true,
+      // role: "",
+      formEditUser.setFieldValue("id", data.data.content.id);
+      formEditUser.setFieldValue("name", data.data.content.name);
+      formEditUser.setFieldValue("email", data.data.content.email);
+      formEditUser.setFieldValue("password", data.data.content.password);
+      formEditUser.setFieldValue("phone", data.data.content.phone);
+      formEditUser.setFieldValue("birthday", data.data.content.birthday);
+      formEditUser.setFieldValue("role", data.data.content.role);
       showEditUserModal();
     } catch (error) {}
   };
@@ -324,7 +339,7 @@ const UserManage = () => {
                   <input
                     id="default-radio-1"
                     type="radio"
-                    defaultValue
+                    value
                     name="default-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -340,7 +355,7 @@ const UserManage = () => {
                     defaultChecked
                     id="default-radio-2"
                     type="radio"
-                    defaultValue
+                    value
                     name="default-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -378,7 +393,7 @@ const UserManage = () => {
                 onChange={formEditUser.handleChange}
                 type="text"
                 id="email"
-                defaultValue={userDataByID?.email}
+                value={formEditUser.values.email}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -395,7 +410,7 @@ const UserManage = () => {
               </label>
               <input
                 onChange={formEditUser.handleChange}
-                defaultValue={userDataByID?.name}
+                value={formEditUser.values.name}
                 type="text"
                 id="name"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -413,7 +428,7 @@ const UserManage = () => {
                 onChange={formEditUser.handleChange}
                 type="text"
                 id="phone"
-                defaultValue={userDataByID?.phone}
+                value={formEditUser.values.phone}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -429,7 +444,7 @@ const UserManage = () => {
                 onChange={formEditUser.handleChange}
                 type="text"
                 id="password"
-                defaultValue={userDataByID?.password}
+                value={formEditUser.values.password}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -445,7 +460,7 @@ const UserManage = () => {
                 onChange={formEditUser.handleChange}
                 type="date"
                 id="birthday"
-                defaultValue={userDataByID?.birthday}
+                value={formEditUser.values.birthday}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -461,7 +476,7 @@ const UserManage = () => {
                 onChange={formEditUser.handleChange}
                 type="text"
                 id="role"
-                defaultValue={userDataByID?.role}
+                value={formEditUser.values.role}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -473,7 +488,7 @@ const UserManage = () => {
                   <input
                     id="default-radio-1"
                     type="radio"
-                    defaultValue
+                   value
                     name="default-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
@@ -489,7 +504,7 @@ const UserManage = () => {
                     defaultChecked
                     id="default-radio-2"
                     type="radio"
-                    defaultValue
+                   value
                     name="default-radio"
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />

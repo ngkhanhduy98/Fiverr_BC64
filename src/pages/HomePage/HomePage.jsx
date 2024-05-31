@@ -8,7 +8,20 @@ import serviceImg from "../../asset/image/selling.png";
 import SerCarousel from "./SerCarousel/SerCarousel";
 import Explore from "./Explore/Explore";
 import Categories from "./Caregories/Categories";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+
 const HomePage = () => {
+  const navigate = useNavigate();
+  const formSearch = useFormik({
+    initialValues: {
+      tenCongViec: "",
+    },
+    onSubmit: async (value) => {
+      console.log(value);
+      navigate(`/works/search/${value.tenCongViec}`);
+    },
+  });
   return (
     <div>
       <div className="relative">
@@ -27,10 +40,15 @@ const HomePage = () => {
             </h3>
           </div>
 
-          <form action="" className="flex flex-wrap mt-4">
+          <form
+            action=""
+            onSubmit={formSearch.handleSubmit}
+            className="flex flex-wrap mt-4"
+          >
             <input
+              onChange={formSearch.handleChange}
               type="text"
-              id="first_name"
+              id="tenCongViec"
               className="xl:w-[550px] md:w-[450px] w-[250px] border border-gray-300 text-gray-900 text-base font-medium rounded-l-[5px] block px-4 py-3 focus:border-red-600 "
               placeholder="What service aur you looking for today ?"
               required

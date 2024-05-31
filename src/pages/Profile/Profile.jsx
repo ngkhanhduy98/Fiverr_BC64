@@ -179,7 +179,12 @@ const Profile = () => {
               </span>
             </div>
             <div className="flex flex-wrap items-center justify-end mt-3">
-              <button className="text-xl text-white bg-green-500 px-6 py-2 rounded-md mr-5 hover:shadow-xl duration-300">
+              <button
+                onClick={() => {
+                  navigate(`/works/detail/${data.congViec.id}`);
+                }}
+                className="text-xl text-white bg-green-500 px-6 py-2 rounded-md mr-5 hover:shadow-xl duration-300"
+              >
                 View detail
               </button>
               <button

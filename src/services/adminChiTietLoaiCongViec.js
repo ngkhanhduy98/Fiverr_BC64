@@ -13,4 +13,24 @@ export const adminChiTietLoaiCongViecSer = {
       },
     });
   },
+  postChiTietLoaiCongViec: (data, userToken) => {
+    let uri = `/api/chi-tiet-loai-cong-viec/`;
+    return http.post(uri, data, {
+      headers: {
+        token: userToken,
+      },
+    });
+  },
+  postNhomChiTietLoai: (data, userToken) => {
+    let uri = `/api/chi-tiet-loai-cong-viec/them-nhom-chi-tiet-loai`;
+    return http.post(uri, data, {
+      headers: {
+        token: userToken,
+      },
+    });
+  },
+  getChiTietLoaiCongViecById: (id) => {
+    let uri = `/api/chi-tiet-loai-cong-viec/${id}`;
+    return http.get(uri);
+  },
 };
