@@ -305,7 +305,7 @@ const WorkDetail = () => {
         </div>
         <DetailComment></DetailComment>
       </div>
-      <div className="sticky border top-48 my-5 h-fit">
+      <div className="sticky border top-48 my-5 h-fit xl:col-span-1 col-span-2">
         <div className="grid grid-cols-3">
           <h3 className="text-center py-2 font-bold bg-gray-50 hover:bg-white cursor-pointer text-gray-400 hover:text-green-400 border border-b-2 hover:border-b-green-400 duration-300">
             Basic

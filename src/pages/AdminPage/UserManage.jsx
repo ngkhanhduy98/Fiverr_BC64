@@ -25,10 +25,12 @@ const UserManage = () => {
       // birthday: "",
       // gender: true,
       // role: "",
+      // console.log(`Pass by id`, data.data.content.password);
       formEditUser.setFieldValue("id", data.data.content.id);
       formEditUser.setFieldValue("name", data.data.content.name);
       formEditUser.setFieldValue("email", data.data.content.email);
-      formEditUser.setFieldValue("password", data.data.content.password);
+      // formEditUser.setFieldValue("password", data.data.content.password);
+
       formEditUser.setFieldValue("phone", data.data.content.phone);
       formEditUser.setFieldValue("birthday", data.data.content.birthday);
       formEditUser.setFieldValue("role", data.data.content.role);
@@ -137,7 +139,6 @@ const UserManage = () => {
       id: 0,
       name: "",
       email: "",
-      password: "",
       phone: "",
       birthday: "",
       gender: true,
@@ -433,22 +434,7 @@ const UserManage = () => {
                 required
               />
             </div>
-            <div className="ml-2">
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Password
-              </label>
-              <input
-                onChange={formEditUser.handleChange}
-                type="text"
-                id="password"
-                value={formEditUser.values.password}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
+
             <div className="ml-2">
               <label
                 htmlFor="birthday"
@@ -519,7 +505,7 @@ const UserManage = () => {
             </div> */}
           </div>
           <button className="px-7 py-2 bg-green-400 hover:bg-green-500 duration-300 text-white font-semibold absolute left-8 bottom-4 rounded-lg">
-            Add
+            Confirm
           </button>
         </form>
       </Modal>

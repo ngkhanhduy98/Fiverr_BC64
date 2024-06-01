@@ -97,7 +97,9 @@ const SearchPage = () => {
   return (
     <div className="xl:max-w-[1400px] mx-auto max-w-[96%] my-2 items-center">
       {/* Data cunng cho no do trong  */}
-      {/* <h3 className="text-2xl mt-8 font-semibold">{renderChiTietLoai()}</h3> */}
+      <h3 className="text-2xl mt-8 font-semibold">
+        Result for : {tenCongViec}
+      </h3>
       <div className=" flex flex-wrap items-center mt-3 justify-between">
         {/* group left  */}
         <div className="flex flex-wrap items-center">
