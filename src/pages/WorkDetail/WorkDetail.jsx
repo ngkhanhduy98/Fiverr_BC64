@@ -67,7 +67,7 @@ const WorkDetail = () => {
   }, []);
   return (
     <div className="xl:max-w-[1200px] mx-auto max-w-[96%] grid grid-cols-3">
-      <div className="col-span-2 pr-20">
+      <div className="col-span-3 xl:col-span-2 xl:pr-20">
         <h3 className="text-3xl font-bold py-4">
           {congViecChiTiet?.congViec.tenCongViec}
         </h3>
